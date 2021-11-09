@@ -52,7 +52,7 @@ function getFinals(array) {
 })
 return finalTeams
 }
-console.log(getFinals(fifaData));
+// console.log(getFinals(fifaData));
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 3: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher-order function called getYears to do the following: 
@@ -61,13 +61,13 @@ Use the higher-order function called getYears to do the following:
 3. Return an array called years containing all of the years in the getFinals data set*/
 
 function getYears(array, getFinalsCB) {
-    const finalsYears = array.map(function(item){
+    const finalsYears = getFinalsCB(array).map(function(item){
         return item.Year
     })
     return finalsYears
 }
 
-console.log(fifaData, getFinals(fifaData))
+// console.log(fifaData, getFinals(fifaData))
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher-order function getWinners to do the following:  
@@ -77,12 +77,19 @@ Use the higher-order function getWinners to do the following:
 4. Returns the names of all winning countries in an array called `winners` */ 
 // 2 params array, getFinalscb
 
-function getWinners(/* code here */) {
-    /* code here */
-// use maps]()
-//use a conditional if home team goals > away team goals then want home team name; else, want away team name
+function getWinners(array, getFinalsCB) {
+    
+    const winningTeams = getFinalsCB(array).map(function(item){
+        if (item['Home Team Goals'] > item['Away Team Goals']){
+            return item['Home Team Name']
+        } else{
+                return item['Away Team Name']
+        }
+    })
+    return winningTeams
 }
 
+console.log(getWinners(fifaData, getFinals))
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 5: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
@@ -96,10 +103,19 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 // 4 params - array getFinalsCB, getYearsCB, getWinnersCB
-function getWinnersByYear(/* code here */) {
+function getWinnersByYear(array, getFinalsCB, getYearsCB, getWinnersCB) {
     /* code here */
-    // use map -- map over one array and grab each item, then use index to grab item in other array 
+        const winners = getWinnersCB(array, getFinalsCB);
+        const years = getYears(array, getFinalsCB);
+
+        const string = winners.map(function(item, index){
+            return `In ${years[index]}, ${item} won the world cup!`
+        });
+        return string;
 }
+//    console.log(getWinnersByYear(fifaData, getFinals,  getYears, getWinners))
+// use map -- map over one array and grab each item, then use index to grab item in other array 
+
 
 
 
@@ -112,12 +128,18 @@ Use the higher order function getAverageGoals to do the following:
  
  Example of invocation: getAverageGoals(getFinals(fifaData));
 */
-// getfinalsCB, 
-function getAverageGoals(/* code here */) {
+
+function getAverageGoals(getFinalsCB) {
+    const averageGoals = getFinalsCB.reduce(function(acc, item){
+            return acc + item['Home Team Goals'] + item['Away Team Goals'];
+    }, 0);
+    return (averageGoals / getFinalsCB.length).toFixed(2)
+    }   
    /* code here */
+
+
  // use .reduce to add all goals of home/away, then divide by length of the array
 // round to two decimal places(hint: look up toFixed())
-}
 
 
 getAverageGoals(getFinals(fifaData));
